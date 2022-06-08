@@ -14,7 +14,7 @@ using namespace std;
 // defining POS/cashier class 
 // define custom variable named POS with 'struct', with active and timeAt members
 struct POS{
-    bool active; // can melayani or not?
+    bool active; // can melayani or not? true -> is serving ; false -> is no longer serving and ready to serve 
     int timeAt;
 };
 
@@ -77,13 +77,13 @@ int main(){
         for(int i =  0; i< NUM_POS; i++){
             // =>if POS is not serving anyone atm, and queue is populated 
             if(POSArray[i].active == false && myQueue.getSize() != 0){
-                // dequeue
-                myQueue.dequeue();
+                
 
                 POSArray[i].active = true; // occupied and serving cust 
                 POSArray[i].timeAt = myQueue.peek(); // returns the random value of customer
 
-
+                // dequeue
+                myQueue.dequeue();
 
             }
         }

@@ -33,14 +33,15 @@ namespace dsa{
             // constructor
             Queue(): head(NULL), tail(NULL), size(0){};
             
-            // getter and setter function
+            // getter and setter functions
             int getSize();
             void incrementSize();
+            void decrementSize();
             
             // queue operations
             void enqueue(T element);
             T dequeue();
-            void display ();
+            void display (); // do we actually need this?
             T peek(); // returns the first in queue
 
     };
@@ -55,6 +56,12 @@ int dsa::Queue<T>::getSize(){
 template <typename T>
 void dsa::Queue<T>::incrementSize(){
     this->size ++;
+    return;
+
+}
+template <typename T>
+void dsa::Queue<T>::decrementSize(){
+    this->size --;
     return;
 
 }
@@ -84,7 +91,7 @@ void dsa::Queue<T>::enqueue(T element){
         this->tail ->next = NULL;
 
         // increment size 
-        dsa::Queue::incrementSize();
+        dsa::Queue<T>::incrementSize();
 
     }
 }
@@ -97,12 +104,26 @@ T dsa::Queue<T>::dequeue(){
     // move head pointer to next element 
     this->head = this->head->next;
 
+    // update queue size 
+    dsa::Queue<T>::decrementSize();
+
     // remove first element in the list
     return temp->data;
 
 
 }
 
+template <typename T>
+T dsa::Queue<T>::peek(){
+    // check if queue is empty
+    if(dsa::Queue<T>::getSize() == 0){
+        std::cout<< "queue is empty" <<std::endl;
+        return -1;
+    }
+    else{
+        return this->head->data;
+    }
+}
 // template <typename T>
 // void dsa::Queue<T>::display(){
 //     dsa::queue
