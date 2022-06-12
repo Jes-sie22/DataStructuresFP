@@ -15,7 +15,7 @@ using namespace std;
 // define custom variable named POS with 'struct', with active and timeAt members
 struct POS{
     bool active; // can melayani or not? true -> is serving ; false -> is no longer serving and ready to serve 
-    int timeAt;
+    int timeAt; // time spent at POS 
 };
 
 int main(){
@@ -44,9 +44,9 @@ int main(){
     ofstream myFile;
     myFile.open("singleQueue.csv");
 
-    myFile << "Service Time; Number of Processed customers\n";
+    myFile << "Service Time; Number of customers served\n";
     
-    // CASHIER SETUP
+    // POS SETUP
     // dynamically allocate an array for the cashier strutcure
     POS* POSArray = new POS[NUM_POS];
     // set all cashiers to empty / initializing values 
@@ -62,6 +62,7 @@ int main(){
     }
 
     // START OF SIMULATION 
+    // declaring variables for the timer 
     auto start = chrono::steady_clock::now(); // auto to declare variable with complicated data type. 
     auto end = chrono::steady_clock::now(); // std::chrono
     int elapsedTime= int(std::chrono::duration_cast<chrono::seconds> (end-start).count());
@@ -73,7 +74,7 @@ int main(){
             myQueue.enqueue(3);// what is it supposed to enqueue?
         }
 
-        // serving customers 
+        // SERVING CUSTOMERS  
         for(int i =  0; i< NUM_POS; i++){
             // =>if POS is not serving anyone atm, and queue is populated 
             if(POSArray[i].active == false && myQueue.getSize() != 0){
