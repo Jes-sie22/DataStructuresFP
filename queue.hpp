@@ -7,27 +7,25 @@
 namespace dsa{
 
     // defining node class of linked list
-    template <typename T>
     class Node{
+    public:
         // PROPERTIES
-        T data;
+        int data;
         Node* next;
         // OPERATIONS n CONSTRUCTORS
         Node():data(),next(NULL){};
-        Node(T element): data (element),next(NULL);
-
+        Node(int element): data (element), next(NULL){};
     };
 
 
     // defining queue class
-    template <typename T>
     class Queue{
         private:
             int size;
         public:
             // PROPERTIES 
-            Node<T> *head; // aka queuefront
-            Node<T> * tail; // aka queuerear       
+            Node *head; // aka queuefront
+            Node * tail; // aka queuerear       
 
             // methods
             // constructor
@@ -39,37 +37,34 @@ namespace dsa{
             void decrementSize();
             
             // queue operations
-            void enqueue(T element);
-            T dequeue();
+            void enqueue(int element);
+            int dequeue();
             void display (); // do we actually need this?
-            T peek(); // returns the first in queue
+            int peek(); // returns the first in queue
+            void free(); // deletes queue from memory 
 
     };
 }
 
 // IMPLEMENTATION
-template <typename T>
-int dsa::Queue<T>::getSize(){
+int dsa::Queue::getSize(){
     return this->size;
 }
 
-template <typename T>
-void dsa::Queue<T>::incrementSize(){
+void dsa::Queue::incrementSize(){
     this->size ++;
     return;
 
 }
-template <typename T>
-void dsa::Queue<T>::decrementSize(){
+void dsa::Queue::decrementSize(){
     this->size --;
     return;
 
 }
 
-template <typename T>
-void dsa::Queue<T>::enqueue(T element){
+void dsa::Queue::enqueue(int element){
     // creating new node 
-    dsa::Node *newNode = new dsa::Queue::Node(element);
+    dsa::Node *newNode = new dsa::Node(element);
 
     // link to linked list 
     // checking if linked list is empty
@@ -91,13 +86,12 @@ void dsa::Queue<T>::enqueue(T element){
         this->tail ->next = NULL;
 
         // increment size 
-        dsa::Queue<T>::incrementSize();
+        dsa::Queue::incrementSize();
 
     }
-}
+};
 
-template <typename T>
-T dsa::Queue<T>::dequeue(){
+int dsa::Queue::dequeue(){
     // temporary pointer points to head of list 
     dsa::Node* temp = this->head;
 
@@ -105,7 +99,7 @@ T dsa::Queue<T>::dequeue(){
     this->head = this->head->next;
 
     // update queue size 
-    dsa::Queue<T>::decrementSize();
+    dsa::Queue::decrementSize();
 
     // remove first element in the list
     return temp->data;
@@ -113,10 +107,9 @@ T dsa::Queue<T>::dequeue(){
 
 }
 
-template <typename T>
-T dsa::Queue<T>::peek(){
+int dsa::Queue::peek(){
     // check if queue is empty
-    if(dsa::Queue<T>::getSize() == 0){
+    if(dsa::Queue::getSize() == 0){
         std::cout<< "queue is empty" <<std::endl;
         return -1;
     }
@@ -124,7 +117,8 @@ T dsa::Queue<T>::peek(){
         return this->head->data;
     }
 }
-// template <typename T>
-// void dsa::Queue<T>::display(){
-//     dsa::queue
-// }
+
+void dsa::Queue::free(){
+    delete this->head;
+    head = NULL;
+}

@@ -3,44 +3,50 @@ Multi-line queue simulation
 Structure:
 arrays with queue ADT as elements 
 */
-
 #include <iostream>
 #include "./queue.hpp"
 
 #include <fstream> // for making csv file 
 #include <chrono> // for timer
-
+//#include <ctime>
+//#include <cmath>
 
 using namespace std;
 
 // defining POS class
 struct POS{
     bool active;
-    int timeAt; // time spent at pos 
+    int timeAt; // time customer spends at pos 
 
 };
 
 
 int main(){
     // instantiating 3 queues 
-    dsa::Queue<int> Queue1;
-    dsa::Queue<int> Queue2;
-    dsa::Queue<int> Queue3;
+    dsa::Queue Queue1;
+    dsa::Queue Queue2;
+    dsa::Queue Queue3;
+
+    srand(time(0)) ;// to randomize rand() output 
 
     // declaring variables 
-    const int NUM_POS = 3;
-    int customerServed = 0; 
+    const int NUM_POS = 3; // the number of POS 
+    int customerServed = 0; // number of customer served 
+    // range of service time (range) - range of time needed to process a new cust
+    // start of service time - start time of processing each new customer 
+    // simulation time = hwo long the simulation takes place 
+    // arrivaltime = interval between one customer to another 
     int range, startTime, simulationTime, arrivalTime;
-    int cTime = 0 ;// customer time 
+    int cTime = 0 ;// customer time nop
 
     // getting user inputs 
-    cout << "Start of service time: ";
+    cout << "Start of service time: (eg.50) ";
     cin>> startTime;
 
-    cout<< "Range of service time: ";
+    cout<< "Range of service time: (eg.30) ";
     cin>> range;
 
-    cout<< "Simulation time(seconds): ";
+    cout<< "Simulation time/secs: ";
     cin>> simulationTime;
 
     cout<< "Arrival time: ";
@@ -50,10 +56,10 @@ int main(){
     ofstream myFile;
     myFile.open("multiLineQueue.csv");
 
-    myFile << "Service Time; Number of customers served"<<endl;
+    myFile << "Service Time; Number of customers served\n";
     
     // POS SETUP
-    // allocating array for each line 
+    // allocating array for POS structure
     POS* POSArray = new POS[NUM_POS];
     // initializing POS values
     for(int i = 0; i < NUM_POS; i++){
@@ -135,16 +141,23 @@ int main(){
         elapsedTime = int(chrono::duration_cast<chrono::seconds> (end-start).count());//typecasting 
 
         if (elapsedTime != prevTime){
-            myFile<<elapsedTime<<";"<<customerServed<<"\n";
+            myFile << elapsedTime<<";"<<customerServed<<"\n";
             cout<<elapsedTime<<" ";
         }    
 
         cTime++;
     }
 
+    myFile.flush();
     myFile.close();
     cout<<"Total number of customers served: "<< customerServed;
 
+    // prevent ememory leaks 
+    delete POSArray;
+    POSArray = NULL;
+    Queue1.free();
+    Queue2.free();
+    Queue3.free();
 
 
     
