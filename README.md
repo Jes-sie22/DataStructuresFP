@@ -1,5 +1,5 @@
 ## Data Structures Final Project 
-Comparing the efficiency between queueing systems with queueing simulations made with Queue data structure in C++
+Comparing the efficiency between queueing systems using queueing simulations made with Queue data structure in C++
 
 ### queueing systems:
 * single-line,multiple POS 
