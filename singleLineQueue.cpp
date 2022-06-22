@@ -1,7 +1,7 @@
 /* 
 SINGLE QUEUE SIMULATION 
 overall structure:
-POS are arrays 
+POSs are represented by arrays
 the single line queue implements queue ADT
 */
 #include <iostream>
@@ -9,14 +9,13 @@ the single line queue implements queue ADT
 
 #include <fstream> //remove error from making csv file idk how  
 #include <chrono> // deals with date and time(precision timers)-> for steady clock 
-
-// #include <ctime>
-// #include <cmath>
+#include <ctime> // c data structure which contains time(0) // not to be confused with CTime variable
 
 
 using namespace std;
 // defining POS/cashier class 
 // define custom variable named POS with 'struct', with active and timeAt members
+
 struct POS{
     bool active; // true -> POS is serving ; false -> is no longer serving and ready to serve 
     int timeAt; // time spent at POS 
@@ -31,13 +30,14 @@ int main(){
     const int NUM_POS = 3; // number of cashiers
     int customerServed = 0; // number of customers served
     int range, startTime, simulationTime, arrivalTime;
+    int cTime = 0; // counter
+
     /*range = how much time each customer need to be served 
     start time = ?
     simulationTime = how long the simulation will run (seconds)
     arrivalTime = how much time needed for each cutomer to get to the pos
     more arrival time => not alot of ppl waiting in queue*/
-    int cTime = 0;
-    
+
     // getting user inputs 
     cout << "Start of service time: (eg.50) ";
     cin>> startTime;
@@ -56,12 +56,12 @@ int main(){
     ofstream myFile;
     myFile.open("singleLineQueue.csv");
 
-    myFile << "Service Time; Number of customers served\n";
+    myFile << "Service Time, Number of customers served\n";
     
     // POS SETUP
-    // dynamically allocate an array for the POS strutcure
+    // dynamically allocate an array for the POS structure
     POS* POSArray = new POS[NUM_POS];
-    // set all cashiers to empty / initializing values 
+    // set all POS to empty / initializing values 
     for(int i = 0; i< NUM_POS;i++){
         POSArray[i].active = false;
         POSArray[i].timeAt = 0;
@@ -82,7 +82,7 @@ int main(){
     // main loop to keep simulation running 
     while(elapsedTime < simulationTime){
         if(cTime % arrivalTime == 0){
-            // adding more customer to queue
+            // adding customer to queue
             myQueue.enqueue(rand()%range + startTime);
         }
 
@@ -92,7 +92,6 @@ int main(){
             // check if POS is not serving anyone atm, and if queue is populated 
             if(POSArray[i].active == false && myQueue.getSize() != 0){
                 
-
                 POSArray[i].active = true; // occupied and serving cust 
                 POSArray[i].timeAt = myQueue.peek(); // returns the random value of customer
 
@@ -109,7 +108,7 @@ int main(){
                 POSArray[i].timeAt--;
             }
 
-            // 3. free up POS after customer is served 
+            // 3. free up POS after customer has been served 
             // check if POS is done serving 
             if(POSArray[i].active == true && POSArray[i].timeAt ==0){
                 // set cashier to open if the time limit is reached, increment number of customer served
@@ -138,7 +137,7 @@ int main(){
     myFile.close();
     cout<<"\nTotal number of customers served: "<< customerServed;
 
-    // prevnt memory leaks 
+    // prevent memory leaks 
     delete POSArray;
     POSArray = NULL;
 
