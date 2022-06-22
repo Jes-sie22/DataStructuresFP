@@ -6,7 +6,7 @@ Comparing the efficiency between queueing systems using queueing simulations mad
 * multi-line,multiple POS 
 
 ### File structure:
-* queue.hpp - queue header file
+* queue.hpp - queue ADT header file
 * multiLine.cpp - multi-line,multiple POS queueing system simulation
 * singleLine.cpp - single-line,multiple POS queueing system simulation
 
