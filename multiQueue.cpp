@@ -1,15 +1,18 @@
-/*
+/* more efficient multi line queue
 Multi-line queue simulation
 Structure:
 arrays with queue ADT as elements 
+
+2 arrays - one for POS // one for QUEUEs
+actual simulation with queue ADT as elements 
+customer finds shortest queue 
 */
 #include <iostream>
 #include "./queue.hpp"
 
 #include <fstream> // for making csv file 
 #include <chrono> // for timer
-//#include <ctime>
-//#include <cmath>
+#include <ctime> // srand(time())
 
 using namespace std;
 
@@ -20,43 +23,60 @@ struct POS{
 
 };
 
+// function to identify shortest line 
+// parameter (all three queues)
+int shortestQueue(dsa::Queue queues[]){
+    int shortest = 0; // shortest - stores index of the shortest queue
+    // traversing each queue 
+    for(int i = 0; i<3; i++){
+        if(queues[i].getSize() < queues[shortest].getSize()){
+            shortest = i;
+        }
+    }
+    return shortest;
+}
 
-int main(){
-    // instantiating 3 queues 
-    dsa::Queue Queue1;
-    dsa::Queue Queue2;
-    dsa::Queue Queue3;
-
-    srand(time(0)) ;// to randomize rand() output 
+int main(){ 
 
     // declaring variables 
-    const int NUM_POS = 3; // the number of POS 
+    const int NUM_POS = 3; // the number of POS
     int customerServed = 0; // number of customer served 
+    int range, startTime, simulationTime, arrivalTime;
+    int cTime = 0 ;// customer time 
     // range of service time (range) - range of time needed to process a new cust
     // start of service time - start time of processing each new customer 
-    // simulation time = hwo long the simulation takes place 
+    //                       - probability that a customer arrives in one tick (%):
+    // simulation time = how long the simulation takes place 
     // arrivaltime = interval between one customer to another 
-    int range, startTime, simulationTime, arrivalTime;
-    int cTime = 0 ;// customer time nop
+
+
+    // declaring array with queue adt as elements 
+    dsa::Queue qArr[NUM_POS];
+
+
+    srand(time(0)) ;// to randomize rand() output  // time(0) -> random number seed ->initialize a pseudorandom number generator.
+    // time() returns current calendar time as object of type time_t
+    
 
     // getting user inputs 
-    cout << "Start of service time: (eg.50) ";
+    cout << "Start of service time: (eg.50) "; 
     cin>> startTime;
 
     cout<< "Range of service time: (eg.30) ";
     cin>> range;
 
+    cout<< "Arrival time: ";
+    cin>> arrivalTime;
+
     cout<< "Simulation time/secs: ";
     cin>> simulationTime;
 
-    cout<< "Arrival time: ";
-    cin>> arrivalTime;
 
     // creating and opening csv file 
     ofstream myFile;
     myFile.open("multiLineQueue.csv");
 
-    myFile << "Service Time; Number of customers served\n";
+    myFile << "Service Time, Number of customers served\n";
     
     // POS SETUP
     // allocating array for POS structure
@@ -69,10 +89,11 @@ int main(){
     }
 
     // inserting 8 customers into each queue 
-    for (int i = 0 ; i < 8; i++){
-        Queue1.enqueue(rand() % range + startTime);// rand() -> generates random numbers in range [0, RAND_MAX ~ 32767] 
-        Queue2.enqueue(rand() % range + startTime); // random amount of time the customer needs to be served 
-        Queue3.enqueue(rand() % range + startTime);
+    for (int custIndex = 0 ; custIndex < 8; custIndex++){
+        for (int qIndex = 0; qIndex < 3; qIndex++){
+            qArr[qIndex].enqueue(rand() % range + startTime); // random amount of time the customer needs to be served 
+        }
+         
     }
 
     // START OF SIMULATION 
@@ -83,36 +104,25 @@ int main(){
 
     // main loop 
     while(elapsedTime < simulationTime){
+        // checks if interval between each customer is reached
         if(cTime % arrivalTime == 0 ){
-            // keep adding customers to queue 
-            Queue1.enqueue(rand()%range + startTime);
-            Queue2.enqueue(rand()%range + startTime);
-            Queue3.enqueue(rand()%range + startTime);
-
+           
+            // add a customer the shortest of the queues
+            int shortestQIndex = shortestQueue(qArr);
+            qArr[shortestQIndex].enqueue(rand() % range + startTime);
+            
         }
 
         // SERVING CUSTOMERS
         // 1. getting a customer to the cashier in each line 
-        // queue 1 
-        if(POSArray[0].active == false && Queue1.getSize() != 0 ){
-            POSArray[0].active = true; // occupied and serving customers 
-            POSArray[0].timeAt = Queue1.peek();
+        for(int i = 0; i< NUM_POS; i++){
+            if(POSArray[i].active == false && qArr[i].getSize() != 0){
+                POSArray[i].active = true; // serving customers
+                POSArray[i].timeAt = qArr[i].peek();
 
-            Queue1.dequeue();
-        }
-        // queue 2
-        if(POSArray[1].active == false && Queue2.getSize() != 0 ){
-            POSArray[1].active = true; // occupied and serving customers 
-            POSArray[1].timeAt = Queue2.peek();
+                qArr[i].dequeue();
 
-            Queue2.dequeue();
-        }
-        // queue 3
-        if(POSArray[2].active == false && Queue3.getSize() != 0 ){
-            POSArray[2].active = true; // occupied and serving customers 
-            POSArray[2].timeAt = Queue3.peek();
-
-            Queue3.dequeue();
+            }
         }
 
         // 2. customer spending time at POS
@@ -122,10 +132,10 @@ int main(){
             }
 
             
-            // 3. free up POS after customer is done 
+            // 3. free up POS after customer is served
             // cheking if customer is done 
             if(POSArray[i].active == true && POSArray[i].timeAt == 0){
-                POSArray[i].active = false; // reset POS 
+                POSArray[i].active = false; // open POS to new customer 
 
                 customerServed++; // incrementing number of customer served 
             }
@@ -141,7 +151,7 @@ int main(){
         elapsedTime = int(chrono::duration_cast<chrono::seconds> (end-start).count());//typecasting 
 
         if (elapsedTime != prevTime){
-            myFile << elapsedTime<<";"<<customerServed<<"\n";
+            myFile << elapsedTime<<","<<customerServed<<"\n";
             cout<<elapsedTime<<" ";
         }    
 
@@ -150,17 +160,16 @@ int main(){
 
     myFile.flush();
     myFile.close();
-    cout<<"Total number of customers served: "<< customerServed;
+    cout<<"\nTotal number of customers served: "<< customerServed;
 
-    // prevent ememory leaks 
+    // prevent memory leaks 
     delete POSArray;
     POSArray = NULL;
-    Queue1.free();
-    Queue2.free();
-    Queue3.free();
-
-
-    
+    for (int i = 0 ; i < NUM_POS; i++){
+        qArr[i].free();
+    }
+    delete qArr;
+   
 
 
 }
