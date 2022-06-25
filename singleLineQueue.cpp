@@ -27,9 +27,8 @@ int main(){
     srand(time(0)); // randomize rand() output 
 
     // declaring variables 
-    const int NUM_POS = 3; // number of cashiers
     int customerServed = 0; // number of customers served
-    int range, startTime, simulationTime, arrivalTime;
+    int NUM_POS, range, startTime, simulationTime, arrivalTime;
     int cTime = 0; // counter
 
     /*range = how much time each customer need to be served 
@@ -39,15 +38,14 @@ int main(){
     more arrival time => not alot of ppl waiting in queue*/
 
     // getting user inputs 
+    cout << " Number of servers or points of sales: ";
+    cin >> NUM_POS;
     cout << "Start of service time: (eg.50) ";
     cin>> startTime;
-
     cout<< "Range of service time: (eg.30) ";
     cin>> range;
-
     cout<< "Arrival time: ";
     cin>> arrivalTime;
-    
     cout<< "Simulation time/secs: ";
     cin>> simulationTime;
 

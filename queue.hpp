@@ -39,7 +39,6 @@ namespace dsa{
             // queue operations
             void enqueue(int element);
             int dequeue();
-            void display (); // do we actually need this?
             int peek(); // returns the first in queue
             void free(); // deletes queue from memory 
 
@@ -94,17 +93,12 @@ void dsa::Queue::enqueue(int element){
 int dsa::Queue::dequeue(){
     // temporary pointer points to head of list 
     dsa::Node* temp = this->head;
-
     // move head pointer to next element 
     this->head = this->head->next;
-
     // update queue size 
     dsa::Queue::decrementSize();
-
     // remove first element in the list
     return temp->data;
-
-
 }
 
 int dsa::Queue::peek(){

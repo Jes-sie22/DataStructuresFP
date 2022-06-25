@@ -39,38 +39,34 @@ int shortestQueue(dsa::Queue queues[]){
 int main(){ 
 
     // declaring variables 
-    const int NUM_POS = 3; // the number of POS
+     
     int customerServed = 0; // number of customer served 
-    int range, startTime, simulationTime, arrivalTime;
-    int cTime = 0 ;// customer time 
+    int NUM_POS, range, startTime, simulationTime, arrivalTime;
+    int cTime = 0 ;// time counter 
     // range of service time (range) - range of time needed to process a new cust
     // start of service time - start time of processing each new customer 
     //                       - probability that a customer arrives in one tick (%):
     // simulation time = how long the simulation takes place 
     // arrivaltime = interval between one customer to another 
-
-
-    // declaring array with queue adt as elements 
-    dsa::Queue qArr[NUM_POS];
-
-
+    // the number of POS
     srand(time(0)) ;// to randomize rand() output  // time(0) -> random number seed ->initialize a pseudorandom number generator.
     // time() returns current calendar time as object of type time_t
     
 
     // getting user inputs 
+    cout << " Number of servers or points of sales: ";
+    cin >> NUM_POS;
     cout << "Start of service time: (eg.50) "; 
     cin>> startTime;
-
     cout<< "Range of service time: (eg.30) ";
     cin>> range;
-
     cout<< "Arrival time: ";
     cin>> arrivalTime;
-
     cout<< "Simulation time/secs: ";
     cin>> simulationTime;
 
+    // declaring array with queue adt as elements 
+    dsa::Queue qArr[NUM_POS];
 
     // creating and opening csv file 
     ofstream myFile;
@@ -168,7 +164,7 @@ int main(){
     for (int i = 0 ; i < NUM_POS; i++){
         qArr[i].free();
     }
-    delete qArr;
+    // delete qArr;
    
 
 
