@@ -11,7 +11,8 @@ Comparing the efficiency between queueing systems using queueing simulations mad
 * singleLine.cpp - single-line,multiple POS queueing system simulation
 
 ### Project Documentation
-https://docs.google.com/document/d/1NilP8050997lrWEF5MLcqdkvrXKPpqsJy4wtSmmjwNA/edit?usp=sharing 
+* to easily access each section with the outline feature 
+* https://docs.google.com/document/d/1NilP8050997lrWEF5MLcqdkvrXKPpqsJy4wtSmmjwNA/edit?usp=sharing 
 
 ### Members
 * Jessica Sie - 2502053653
